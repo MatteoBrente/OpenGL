@@ -4,7 +4,7 @@ EBO::EBO (GLuint* vertices, GLsizeiptr size)
 {
     glGenBuffers (1, &ID);
     glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, ID);
-    glBufferData (GL_ELEMENT_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData (GL_ELEMENT_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
 void EBO::Bind()
