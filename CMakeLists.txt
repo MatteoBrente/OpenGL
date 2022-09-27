@@ -4,13 +4,13 @@ project(opengl_test VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-INCLUDE_DIRECTORIES(include)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
 link_directories(lib)
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin/")
 
-add_executable(opengl_test src/main.cpp src/glad.c)
+add_executable(opengl_test src/EBO.cpp src/main.cpp src/shaderClass.cpp src/VAO.cpp src/VBO.cpp src/glad.c)
 
 TARGET_LINK_LIBRARIES(opengl_test libglfw3dll.a)
 
