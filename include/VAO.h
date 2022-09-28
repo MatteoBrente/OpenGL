@@ -1,21 +1,24 @@
-#ifndef _VAO_CLASS_H_
-#define _VAO_CLASS_H_
+#ifndef VAO_CLASS_H
+#define VAO_CLASS_H
 
-#include <glad/glad.h>
-#include "VBO.h"
-
+#include<glad/glad.h>
+#include"VBO.h"
 
 class VAO
 {
-    public:
-        GLuint ID;
-        
-        VAO();
-        
-        void LinkVBO(VBO VBO, GLuint layout);
-        void Bind();
-        void Unbind();
-        void Delete();
-};
+public:
+	// ID reference for the Vertex Array Object
+	GLuint ID;
+	// Constructor that generates a VAO ID
+	VAO();
 
-#endif //_VAO_CLASS_H_
+	// Links a VBO to the VAO using a certain layout
+	void LinkVBO(VBO& VBO, GLuint layout);
+	// Binds the VAO
+	void Bind();
+	// Unbinds the VAO
+	void Unbind();
+	// Deletes the VAO
+	void Delete();
+};
+#endif
