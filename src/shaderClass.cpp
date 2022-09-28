@@ -1,6 +1,6 @@
 #include "shaderClass.h"
 
-std::string getFileContents (const char* filename)
+std::string getFileContents(const char* filename)
 {
 	std::ifstream in(filename, std::ios::binary);
 	if (in)
@@ -16,7 +16,7 @@ std::string getFileContents (const char* filename)
 	throw(errno);
 }
 
-Shader::Shader (const char* vertexFile, const char* fragmentFile)
+Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {
     std::string vertexCode {getFileContents(vertexFile)};
     std::string fragmentCode {getFileContents(fragmentFile)};

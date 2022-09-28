@@ -1,12 +1,12 @@
-#include<iostream>
-#include<glad/glad.h>
-#include<GLFW/glfw3.h>
-#include<math.h>
+#include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <math.h>
 
-#include"shaderClass.h"
-#include"VAO.h"
-#include"VBO.h"
-#include"EBO.h"
+#include "shaderClass.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
 
 // Vertices coordinates
