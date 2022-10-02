@@ -1,30 +1,41 @@
-#include<iostream>
-#include<glad/glad.h>
-#include<GLFW/glfw3.h>
-#include<stb/stb_image.h>
+#include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include"Texture.h"
-#include"shaderClass.h"
-#include"VAO.h"
-#include"VBO.h"
-#include"EBO.h"
+#include "Texture.h"
+#include "shaderClass.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
+
+const unsigned int WIDTH = 800;
+const unsigned int HEIGHT = 800;
 
 
 // Vertices coordinates
 GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	0.0f, 0.0f, // Lower left corner
-	-0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 1.0f, // Upper left corner
-	 0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	1.0f, 1.0f, // Upper right corner
-	 0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 1.0f,	1.0f, 0.0f  // Lower right corner
+{ //     COORDINATES     /        COLORS        /    TexCoord  //
+	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,		0.0f, 0.0f,
+	0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,		5.0f, 0.0f,
+	0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,		2.5f, 5.0f
 };
 
 // Indices for vertices order
 GLuint indices[] =
 {
-	0, 2, 1, // Upper triangle
-	0, 3, 2 // Lower triangle
+	0, 1, 2,
+	0, 2, 3,
+	0, 1, 4,
+	1, 2, 4,
+	2, 3, 4,
+	3, 0, 4
 };
 
 
@@ -43,7 +54,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(800, 800, "YoutubeOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "YoutubeOpenGL", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -89,22 +100,13 @@ int main()
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
 
-
-	/*
-	* I'm doing this relative path thing in order to centralize all the resources into one folder and not
-	* duplicate them between tutorial folders. You can just copy paste the resources from the 'Resources'
-	* folder and then give a relative path from this folder to whatever resource you want to get to.
-	* Also note that this requires C++17, so go to Project Properties, C/C++, Language, and select C++17
-	*/
-
 	// Texture
-	Texture popCat("resources/textures/pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture popCat("resources/textures/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	popCat.texUnit(shaderProgram, "tex0", 0);
 
 	// Original code from the tutorial
 	/*Texture popCat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	popCat.texUnit(shaderProgram, "tex0", 0);*/
-
 
 
 	// Main while loop
@@ -116,6 +118,22 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
+
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
+		view = glm::translate (view, glm::vec3(0.0f, -0.5f, -2.0f));
+		proj = glm::perspective (glm::radians(45.0f), (float)(WIDTH / HEIGHT), 0.1f, 100.0f);
+
+		int modelLoc = glGetUniformLocation (shaderProgram.ID, "model");
+		glUniformMatrix4fv (modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		
+		int viewLoc = glGetUniformLocation (shaderProgram.ID, "view");
+		glUniformMatrix4fv (viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		
+		int projLoc = glGetUniformLocation (shaderProgram.ID, "proj");
+		glUniformMatrix4fv (projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
 		// Assigns a value to the uniform; NOTE: Must always be done after activating the Shader Program
 		glUniform1f(uniID, 0.5f);
 		// Binds texture so that is appears in rendering
@@ -123,7 +141,7 @@ int main()
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (sizeof(indices) / sizeof(int)), GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
