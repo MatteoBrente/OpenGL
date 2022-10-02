@@ -10,7 +10,7 @@ link_directories(lib)
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin/")
 
-add_executable(opengl_test src/EBO.cpp src/main.cpp src/shaderClass.cpp src/VAO.cpp src/VBO.cpp src/glad.c)
+add_executable(opengl_test src/EBO.cpp src/glad.c src/main.cpp src/shaderClass.cpp src/stb.cpp src/texture.cpp src/VAO.cpp src/VBO.cpp)
 
 TARGET_LINK_LIBRARIES(opengl_test libglfw3dll.a)
 
