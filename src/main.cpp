@@ -101,7 +101,7 @@ int main()
 
 
 	// Texture
-	Texture popCat("./resources/textures/kek.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture popCat("./resources/textures/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	popCat.texUnit(shaderProgram, "tex0", 0);
 
 	float rotation = 0.0f;
