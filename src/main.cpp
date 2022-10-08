@@ -14,8 +14,8 @@
 #include "camera.h"
 
 
-const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 800;
+const unsigned int WIDTH = 1280;
+const unsigned int HEIGHT = 720;
 
 
 // Vertices coordinates
@@ -25,7 +25,7 @@ GLfloat vertices[] =
 	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
 	0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,		0.0f, 0.0f,
 	0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,		5.0f, 0.0f,
-	0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,		2.5f, 5.0f
+	0.0f, 1.0f,  0.0f,     0.92f, 0.86f, 0.76f,		2.5f, 5.0f
 };
 
 // Indices for vertices order
@@ -54,7 +54,7 @@ int main()
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
+	// Create a GLFWwindow object naming it "YoutubeOpenGL"
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "YoutubeOpenGL", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
@@ -70,7 +70,7 @@ int main()
 	gladLoadGL();
 	// Specify the viewport of OpenGL in the Window
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, WIDTH, HEIGHT);
 
 
 
