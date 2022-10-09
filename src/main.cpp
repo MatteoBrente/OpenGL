@@ -13,22 +13,22 @@
 #include "EBO.h"
 #include "camera.h"
 
-
+//Width and height of the window
 const unsigned int WIDTH = 1280;
 const unsigned int HEIGHT = 720;
 
 
-// Vertices coordinates
+// Vertices buffer, that contains the commented attributes
 GLfloat vertices[] =
 { //     COORDINATES     /        COLORS        /    TexCoord  //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,		0.0f, 0.0f,
-	0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,		5.0f, 0.0f,
-	0.0f, 1.0f,  0.0f,     0.92f, 0.86f, 0.76f,		2.5f, 5.0f
+	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,    0.0f, 0.0f,
+	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,    5.0f, 0.0f,
+	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,    0.0f, 0.0f,
+	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,    5.0f, 0.0f,
+	 0.0f, 1.0f,  0.0f,     0.92f, 0.86f, 0.76f,    2.5f, 5.0f
 };
 
-// Indices for vertices order
+// Specifies in which order to render the vertices
 GLuint indices[] =
 {
 	0, 1, 2,
@@ -46,16 +46,16 @@ int main()
 	// Initialize GLFW
 	glfwInit();
 
-	// Tell GLFW what version of OpenGL we are using 
-	// In this case we are using OpenGL 3.3
+	// Tell GLFW what version of OpenGL we are using (In this is OpenGL 3.3)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
 	// Tell GLFW we are using the CORE profile
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "YoutubeOpenGL", NULL, NULL);
+	// Create a GLFWwindow object naming it "OpenGL_Test"
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL_Test", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -66,17 +66,14 @@ int main()
 	// Introduce the window into the current context
 	glfwMakeContextCurrent(window);
 
-	//Load GLAD so it configures OpenGL
+	//Load GLAD so it configures OpenGL. Needs to be done after creating the context
 	gladLoadGL();
 	// Specify the viewport of OpenGL in the Window
-	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 	glViewport(0, 0, WIDTH, HEIGHT);
-
 
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("resources/shaders/default.vert", "resources/shaders/default.frag");
-
 
 
 	// Generates Vertex Array Object and binds it
@@ -89,6 +86,7 @@ int main()
 	EBO EBO1(indices, sizeof(indices));
 
 	// Links VBO attributes such as coordinates and colors to VAO
+	// Needs to be done once per attribute (position, color, texture coord)
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
@@ -98,16 +96,16 @@ int main()
 	EBO1.Unbind();
 
 	// Texture
-	Texture popCat("./resources/textures/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	popCat.texUnit(shaderProgram, "tex0", 0);
+	Texture texture("./resources/textures/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture.texUnit(shaderProgram, "tex0", 0);
 
-	//Enables the depth buffer (hides vertices that shouldn't be in view)
+	// Enables the depth buffer (hides vertices that shouldn't be in view)
 	glEnable(GL_DEPTH_TEST);
 
-	//Instanciate camera
+	// Instanciate camera
 	Camera camera(WIDTH, HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
 
-	// Main while loop
+	// Main while loop	
 	while (!glfwWindowShouldClose(window))
 	{
 		// Specify the color of the background
@@ -120,14 +118,14 @@ int main()
 		//Include input functions in the main loop
 		camera.Inputs(window);
 
-		//Create camera matrix
+		// Create camera matrix
 		camera.Matrix(45.0f, 0.1f, 100.f, shaderProgram, "camMatrix");
 
 		// Binds texture so that is appears in rendering
-		popCat.Bind();
+		texture.Bind();
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
-		// Draw primitives, number of indices, datatype of indices, index of indices
+		// Draw primitives
 		glDrawElements(GL_TRIANGLES, (sizeof(indices) / sizeof(int)), GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
@@ -136,15 +134,16 @@ int main()
 	}
 
 
-
 	// Delete all the objects we've created
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	popCat.Delete();
+	texture.Delete();
 	shaderProgram.Delete();
+
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
+
 	// Terminate GLFW before ending the program
 	glfwTerminate();
 	return 0;
