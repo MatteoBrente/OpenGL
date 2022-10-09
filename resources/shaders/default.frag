@@ -7,6 +7,7 @@ in vec2 texCoord;
 
 uniform sampler2D tex0;
 
+// The fragment shader gets called once for each pixel
 void main()
 {
    FragColor = texture(tex0, texCoord);

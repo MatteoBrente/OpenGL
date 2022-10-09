@@ -10,6 +10,7 @@ out vec2 texCoord;
 
 uniform mat4 camMatrix;
 
+// The main purpose of the vertex shader is to tell where you want your vertex on the screen
 void main()
 {
     gl_Position = camMatrix * vec4(aPos, 1.0);

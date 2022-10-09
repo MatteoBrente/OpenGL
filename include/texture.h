@@ -8,11 +8,15 @@
 class Texture
 {
     public:
+        // Reference ID of the Textures
         GLuint ID;
+        // Type of the texture
         GLenum type;
+        // Constructor that build the texture
         Texture (const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
 
         void texUnit (Shader& shader, const char* uniform, GLuint unit);
+
         void Bind();
         void Unbind();
         void Delete();

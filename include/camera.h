@@ -14,10 +14,14 @@
 class Camera
 {
 public:
+    // Camera spawn position
     glm::vec3 Position;
+    // Camera default orientation
     glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
+    // Vector that is used when the space bar (or ctrl) key is pressed
     glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
 
+    // Variable that controls the camera doesn't move
     bool firstClick = true;
 
     int width;
@@ -27,7 +31,6 @@ public:
     float sensitivity = 100.0f;
 
     Camera (int width, int height, glm::vec3 positon);
-    //~Camera();
 
     void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
     void Inputs(GLFWwindow* window);

@@ -40,7 +40,6 @@ GLuint indices[] =
 };
 
 
-
 int main()
 {
 	// Initialize GLFW
@@ -103,7 +102,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	// Instanciate camera
-	Camera camera(WIDTH, HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
+	Camera camera(WIDTH, HEIGHT, glm::vec3(0.0f, 0.5f, 2.5f));
 
 	// Main while loop	
 	while (!glfwWindowShouldClose(window))

@@ -1,5 +1,6 @@
 #include "camera.h"
 
+// Camera constructor
 Camera::Camera(int width, int height, glm::vec3 positon)
 {
     Camera::width = width;
@@ -7,6 +8,7 @@ Camera::Camera(int width, int height, glm::vec3 positon)
     Position = positon;
 }
 
+// Camera matrix
 void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
 {
     glm::mat4 view = glm::mat4(1.0f);
@@ -18,8 +20,10 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
 }
 
+// Function that takes mouse and keyboard inputs
 void Camera::Inputs(GLFWwindow* window)
 {
+    // If statement that handles keyboard inputs
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         Position += speed * Orientation;
@@ -36,18 +40,22 @@ void Camera::Inputs(GLFWwindow* window)
     {
         Position += speed * glm::normalize(glm::cross(Orientation, Up));
     }
+    // Space moves up
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
     {
         Position += speed * Up;
     }
+    // Control moves down
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
     {
         Position += speed * -Up;
     }
+    // Pressing Shift accelerates the movement
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
     {
         speed = 0.05f;
     }
+    // Releasing Shift decelerates the camera movement
     else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
     {
         speed = 0.025f;
