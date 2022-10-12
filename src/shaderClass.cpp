@@ -18,15 +18,15 @@ std::string getFileContents(const char* filename)
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {
-    std::string vertexCode {getFileContents(vertexFile)};
-    std::string fragmentCode {getFileContents(fragmentFile)};
+    std::string vertexCode = getFileContents(vertexFile);
+    std::string fragmentCode = getFileContents(fragmentFile);
 
-    const char* vertexSource {vertexCode.c_str()};
-    const char* fragmentSource {fragmentCode.c_str()};
+    const char* vertexSource = vertexCode.c_str();
+    const char* fragmentSource = fragmentCode.c_str();
 
 	//Create Vertex Shader Object and get reference
 	//Then attach the source to it and compile it in machine code
-	GLuint vertexShader{ glCreateShader(GL_VERTEX_SHADER) };
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 	glCompileShader(vertexShader);
 	//Error check for vertex shader
@@ -34,7 +34,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 
 	//Create Fragment Shader Object and get reference, 
 	//Then attach the source to it and compile it in machine code
-	GLuint fragmentShader{ glCreateShader(GL_FRAGMENT_SHADER) };
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
 	glCompileShader(fragmentShader);
 	//Error check for fragment shader
