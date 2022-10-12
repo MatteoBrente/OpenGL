@@ -18,27 +18,11 @@ std::string getFileContents(const char* filename)
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {
-    std::string vertexCode = getFileContents(vertexFile);
-    std::string fragmentCode = getFileContents(fragmentFile);
+	//Create Vertex Shader
+	GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexFile);
 
-    const char* vertexSource = vertexCode.c_str();
-    const char* fragmentSource = fragmentCode.c_str();
-
-	//Create Vertex Shader Object and get reference
-	//Then attach the source to it and compile it in machine code
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexSource, NULL);
-	glCompileShader(vertexShader);
-	//Error check for vertex shader
-	compileErrors(vertexShader, "VERTEX");
-
-	//Create Fragment Shader Object and get reference, 
-	//Then attach the source to it and compile it in machine code
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-	glCompileShader(fragmentShader);
-	//Error check for fragment shader
-	compileErrors(fragmentShader,"FRAGMENT");
+	//Create Fragment Shader
+	GLuint fragmentShader = CompileShader(GL_VERTEX_SHADER, fragmentFile);
 
 	//Create Shader Program Object and get reference
 	//Then add the Vertex and Fragment shaders to the program
@@ -63,6 +47,25 @@ void Shader::Activate()
 void Shader::Delete()
 {
     glDeleteProgram(ID);
+}
+
+GLuint Shader::CompileShader(GLuint type, const char* sourceFile)
+{
+	//Removes null terminations from file
+	std::string code = getFileContents(sourceFile);
+	const char* src = code.c_str();
+	
+	//Create Shader Object and get reference, 
+	//Then attach the source to it and compile it in machine code
+	GLuint id = glCreateShader(type);
+	glShaderSource(id, 1, &src, NULL);
+	glCompileShader(id);
+
+	//Error check for shader
+	if (type == GL_VERTEX_SHADER)
+		compileErrors(id, "VERTEX");
+	else if (type == GL_FRAGMENT_SHADER)
+		compileErrors(id, "FRAGMENT");
 }
 
 void Shader::compileErrors(unsigned int shader, const char* type)
