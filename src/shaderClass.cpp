@@ -18,21 +18,21 @@ std::string getFileContents(const char* filename)
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {
+	//Create Shader Program Object
+	program = glCreateProgram();
+
 	//Create Vertex Shader
-	GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexFile);
-
+	unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vertexFile);
 	//Create Fragment Shader
-	GLuint fragmentShader = CompileShader(GL_VERTEX_SHADER, fragmentFile);
+	unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentFile);
 
-	//Create Shader Program Object and get reference
 	//Then add the Vertex and Fragment shaders to the program
-	ID = glCreateProgram();
-	glAttachShader(ID, vertexShader);
-	glAttachShader(ID, fragmentShader);
+	glAttachShader(program, vertexShader);
+	glAttachShader(program, fragmentShader);
 	//Link all the shaders together into the program
-	glLinkProgram(ID);
+	glLinkProgram(program);
 	//Error check for program
-	compileErrors(ID,"PROGRAM");
+	compileErrors(program,"PROGRAM");
 
 	//Delete the now useless Vertex and Fragment Shader Objects
 	glDeleteShader(vertexShader);
@@ -41,24 +41,25 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 
 void Shader::Activate()
 {
-    glUseProgram(ID);
+    glUseProgram(program);
 }
 
 void Shader::Delete()
 {
-    glDeleteProgram(ID);
+    glDeleteProgram(program);
 }
 
-GLuint Shader::CompileShader(GLuint type, const char* sourceFile)
+unsigned int Shader::CompileShader(unsigned int type, const char* sourceFile)
 {
+	//Create Shader Object
+	unsigned int id = glCreateShader(type);
+
 	//Removes null terminations from file
 	std::string code = getFileContents(sourceFile);
 	const char* src = code.c_str();
 	
-	//Create Shader Object and get reference, 
-	//Then attach the source to it and compile it in machine code
-	GLuint id = glCreateShader(type);
-	glShaderSource(id, 1, &src, NULL);
+	//Attach the source to it and compile it in machine code
+	glShaderSource(id, 1, &src, nullptr);
 	glCompileShader(id);
 
 	//Error check for shader
@@ -66,11 +67,13 @@ GLuint Shader::CompileShader(GLuint type, const char* sourceFile)
 		compileErrors(id, "VERTEX");
 	else if (type == GL_FRAGMENT_SHADER)
 		compileErrors(id, "FRAGMENT");
+	
+	return id;
 }
 
 void Shader::compileErrors(unsigned int shader, const char* type)
 {
-	GLint hasCompiled;
+	int hasCompiled;
 	char infoLog[1024];
 
 	if (type != "PROGRAM")

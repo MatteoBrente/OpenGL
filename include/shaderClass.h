@@ -12,7 +12,7 @@ class Shader
 {
 public:
 	// Reference ID of the Shader Program
-	GLuint ID;
+	unsigned int program;
 	// Constructor that build the Shader Program from 2 different shaders
 	Shader(const char* vertexFile, const char* fragmentFile);
 
@@ -20,7 +20,7 @@ public:
 	void Delete();
 
 private:
-	GLuint CompileShader(GLuint type, const char* src);
+	unsigned int CompileShader(unsigned int type, const char* src);
 	// Check errors in the compilation of a shader or program
 	void compileErrors(unsigned int shader, const char* type);
 };

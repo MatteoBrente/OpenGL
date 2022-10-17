@@ -17,7 +17,7 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
     view = glm::lookAt(Position, (Position + Orientation), Up);
     projection = glm::perspective(glm::radians(FOVdeg), (float)(width / height), nearPlane, farPlane);
 
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
+    glUniformMatrix4fv(glGetUniformLocation(shader.program, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
 }
 
 // Function that takes mouse and keyboard inputs
