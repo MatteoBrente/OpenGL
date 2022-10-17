@@ -31,6 +31,8 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	glAttachShader(program, fragmentShader);
 	//Link all the shaders together into the program
 	glLinkProgram(program);
+	glValidateProgram(program);
+
 	//Error check for program
 	compileErrors(program,"PROGRAM");
 

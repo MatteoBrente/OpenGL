@@ -95,7 +95,7 @@ int main()
 	EBO1.Unbind();
 
 	// Texture
-	Texture texture("./resources/textures/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture texture("./resources/textures/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	texture.texUnit(shaderProgram, "tex0", 0);
 
 	// Enables the depth buffer (hides vertices that shouldn't be in view)
