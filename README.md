@@ -1,1 +1,1 @@
-# OpenGL_Test
+# OpenGL
