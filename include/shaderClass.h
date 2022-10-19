@@ -20,6 +20,7 @@ public:
 	void Delete();
 
 private:
+	unsigned int compileShader (unsigned int type, const char* sourceFile);
 	// Check errors in the compilation of a shader or program
 	void compileErrors(unsigned int shader, const char* type);
 };
