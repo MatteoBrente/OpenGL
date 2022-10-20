@@ -13,6 +13,10 @@
 #include "EBO.h"
 #include "camera.h"
 
+// Error functions
+static void GLClearErrors();
+static void GLCheckErrors();
+
 //Width and height of the window
 const unsigned int WIDTH = 1280;
 const unsigned int HEIGHT = 720;
@@ -125,7 +129,9 @@ int main()
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
 		// Draw primitives
+		GLClearErrors();
 		glDrawElements(GL_TRIANGLES, (sizeof(indices) / sizeof(int)), GL_UNSIGNED_INT, 0);
+		GLCheckErrors();
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
@@ -146,4 +152,19 @@ int main()
 	// Terminate GLFW before ending the program
 	glfwTerminate();
 	return 0;
+}
+
+static void GLClearErrors()
+{
+	// Deletes all errors by getting them and doing nothing with them
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static void GLCheckErrors()
+{
+	// Create an error object and print it for each GL error
+	while (GLenum error = glGetError())
+	{
+		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+	}
 }
