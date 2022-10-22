@@ -14,6 +14,7 @@
 #include "camera.h"
 
 #define ASSERT(x) if (!(x)) __debugbreak();
+
 #define GLErrorCheck(x) GLClearErrors();\
 	x;\
 	ASSERT(GLLogCall(__FILE__, __LINE__))
@@ -58,8 +59,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-	// Tell GLFW we are using the CORE profile
-	// So that means we only have the modern functions
+	// Tell GLFW we are using the CORE profile (that means we only have the modern functions)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a GLFWwindow object naming it "OpenGL_Test"
@@ -74,7 +74,7 @@ int main()
 	// Introduce the window into the current context
 	glfwMakeContextCurrent(window);
 
-	//Load GLAD so it configures OpenGL. Needs to be done after creating the context
+	// Load GLAD. Needs to be done after creating the context
 	gladLoadGL();
 	// Specify the viewport of OpenGL in the Window
 	glViewport(0, 0, WIDTH, HEIGHT);
@@ -103,12 +103,12 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	// Texture
+	// Assign the texture to the shader program
 	Texture texture("./resources/textures/brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	texture.texUnit(shaderProgram, "tex0", 0);
 
 	// Enables the depth buffer (hides vertices that shouldn't be in view)
-	glEnable(GL_DEPTH_TEST);
+	GLErrorCheck (glEnable (GL_DEPTH_TEST));
 
 	// Instanciate camera
 	Camera camera(WIDTH, HEIGHT, glm::vec3(0.0f, 0.5f, 2.5f));
@@ -117,9 +117,9 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// Specify the color of the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		GLErrorCheck (glClearColor (0.07f, 0.13f, 0.17f, 1.0f));
 		// Clean the back buffer and assign the new color to it
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GLErrorCheck (glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
@@ -151,21 +151,22 @@ int main()
 
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
-
 	// Terminate GLFW before ending the program
 	glfwTerminate();
+
 	return 0;
 }
 
-static void GLClearErrors()
+static void GLClearErrors() 
 {
-	// Deletes all errors by getting them and doing nothing with them
+	// Deletes all previous errors
 	while (glGetError() != GL_NO_ERROR);
 }
 
 static bool GLLogCall(const char* file, int line)
 {
 	// Create an error object and print it for each GL error
+	// Needs to be a bool in order to crash the application if an error is found
 	while (GLenum error = glGetError())
 	{
 		std::cout << "[OpenGL Error " << error << "] At: " << file << ":" << line << std::endl;
