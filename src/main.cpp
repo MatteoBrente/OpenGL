@@ -13,9 +13,14 @@
 #include "EBO.h"
 #include "camera.h"
 
+#define ASSERT(x) if (!(x)) __debugbreak();
+#define GLErrorCheck(x) GLClearErrors();\
+	x;\
+	ASSERT(GLLogCall(__FILE__, __LINE__))
+
 // Error functions
 static void GLClearErrors();
-static void GLCheckErrors();
+static bool GLLogCall(const char* file, int line);
 
 //Width and height of the window
 const unsigned int WIDTH = 1280;
@@ -129,9 +134,7 @@ int main()
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
 		// Draw primitives
-		GLClearErrors();
-		glDrawElements(GL_TRIANGLES, (sizeof(indices) / sizeof(int)), GL_UNSIGNED_INT, 0);
-		GLCheckErrors();
+		GLErrorCheck(glDrawElements(GL_TRIANGLES, (sizeof(indices) / sizeof(int)), GL_UNSIGNED_INT, 0));
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
@@ -160,11 +163,13 @@ static void GLClearErrors()
 	while (glGetError() != GL_NO_ERROR);
 }
 
-static void GLCheckErrors()
+static bool GLLogCall(const char* file, int line)
 {
 	// Create an error object and print it for each GL error
 	while (GLenum error = glGetError())
 	{
-		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+		std::cout << "[OpenGL Error " << error << "] At: " << file << ":" << line << std::endl;
+		return false;
 	}
+	return true;
 }
