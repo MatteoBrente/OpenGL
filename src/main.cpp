@@ -21,7 +21,7 @@ const unsigned int HEIGHT = 720;
 
 
 // Vertices buffer, that contains the commented attributes
-GLfloat vertices[] =
+GLfloat pyramidVertices[] =
 { //     COORDINATES     /        COLORS        /    TexCoord  //
 	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,    0.0f, 0.0f,
 	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,    5.0f, 0.0f,
@@ -30,8 +30,20 @@ GLfloat vertices[] =
 	 0.0f, 1.0f,  0.0f,     0.92f, 0.86f, 0.76f,    2.5f, 5.0f
 };
 
+GLfloat lightCubeVertices[] =
+{ //     COORDINATES     /        COLORS       //
+	1.0f, 1.0f, 1.0f,      1.0f, 1.0f, 1.0f,
+	1.2f, 1.0f, 1.0f,      1.0f, 1.0f, 1.0f,
+	1.2f, 1.2f, 1.0f,      1.0f, 1.0f, 1.0f,
+	1.2f, 1.2f, 1.2f,      1.0f, 1.0f, 1.0f,
+	1.2f, 1.0f, 1.2f,      1.0f, 1.0f, 1.0f,
+	1.0f, 1.2f, 1.2f,      1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.2f,      1.0f, 1.0f, 1.0f,
+	1.0f, 1.2f, 1.0f,      1.0f, 1.0f, 1.0f,	
+};
+
 // Specifies in which order to render the vertices
-GLuint indices[] =
+GLuint pyramidIndices[] =
 {
 	0, 1, 2,
 	0, 2, 3,
@@ -39,6 +51,11 @@ GLuint indices[] =
 	1, 2, 4,
 	2, 3, 4,
 	3, 0, 4
+};
+
+GLuint lightCubeIndices[] =
+{
+
 };
 
 
@@ -81,9 +98,9 @@ int main()
 	VAO1.Bind();
 
 	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vertices, sizeof(vertices));
+	VBO VBO1(pyramidVertices, sizeof(pyramidVertices));
 	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(indices, sizeof(indices));
+	EBO EBO1(pyramidIndices, sizeof(pyramidIndices));
 
 	// Links VBO attributes such as coordinates and colors to VAO
 	// Needs to be done once per attribute (position, color, texture coord)
@@ -126,7 +143,7 @@ int main()
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
 		// Draw primitives
-		GLErrorCheck(glDrawElements(GL_TRIANGLES, (sizeof(indices) / sizeof(int)), GL_UNSIGNED_INT, 0));
+		GLErrorCheck(glDrawElements(GL_TRIANGLES, (sizeof(pyramidIndices) / sizeof(int)), GL_UNSIGNED_INT, 0));
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
